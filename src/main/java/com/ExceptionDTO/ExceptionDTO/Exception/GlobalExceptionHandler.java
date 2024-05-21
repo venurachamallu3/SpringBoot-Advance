@@ -20,4 +20,11 @@ public class GlobalExceptionHandler {
         return  new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<ErrorMessage> handleDuplicateUserException(DuplicateUserException exception, WebRequest webRequest){
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(),exception.getMessage(),webRequest.getDescription(false));
+        return new ResponseEntity<>(errorMessage,HttpStatus.CONFLICT);
+    }
+
 }

@@ -22,13 +22,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserDTO userDTO;
+//    @Autowired
+//    private UserDTO userDTO;
 
 
 
-    @Autowired
-    public ModelMapper modelMapper;
+//    @Autowired
+//    public ModelMapper modelMapper;
 
     @PostMapping("create")
     public ResponseEntity<User> createUser(@RequestBody User user){
@@ -57,5 +57,9 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id){
+       return userService.deleteUserById(id);
+    }
 
 }
