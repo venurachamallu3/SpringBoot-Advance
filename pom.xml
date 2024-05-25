@@ -48,6 +48,29 @@
 			<version>3.2.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.spring4all/spring-boot-starter-swagger -->
+<!--		<dependency>-->
+<!--			<groupId>com.spring4all</groupId>-->
+<!--			<artifactId>spring-boot-starter-swagger</artifactId>-->
+<!--			<version>1.5.0.RELEASE</version>-->
+<!--		</dependency>-->
+
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

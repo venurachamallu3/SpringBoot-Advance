@@ -4,11 +4,13 @@ package com.ExceptionDTO.ExceptionDTO.Controller;
 import com.ExceptionDTO.ExceptionDTO.DTO.UserDTO;
 import com.ExceptionDTO.ExceptionDTO.Entity.User;
 import com.ExceptionDTO.ExceptionDTO.Exception.UserNotFoundException;
+import com.ExceptionDTO.ExceptionDTO.Service.Impl.OwnerUserImp;
 import com.ExceptionDTO.ExceptionDTO.Service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OwnerUserImp ownerUserImp;
+
 //    @Autowired
 //    private UserDTO userDTO;
 
@@ -30,6 +35,8 @@ public class UserController {
 //    @Autowired
 //    public ModelMapper modelMapper;
 
+
+    @PreAuthorize("hasRole(\"ADMIN\")")
     @PostMapping("create")
     public ResponseEntity<User> createUser(@RequestBody User user){
         System.out.println("name si "+user.getName());
@@ -38,8 +45,10 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasAnyRole(\"ADMIN\",\"USER\")")
     @GetMapping("show-users")
     public ResponseEntity<List<User>> getAllUsers(){
+
        List<User> allUsers= userService.getAllUsers();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
@@ -60,6 +69,11 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id){
        return userService.deleteUserById(id);
+    }
+
+    @GetMapping("venu")
+    public String us(){
+        return ownerUserImp.getOwner("venu");
     }
 
 }
