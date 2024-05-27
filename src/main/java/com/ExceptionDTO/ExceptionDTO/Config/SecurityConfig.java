@@ -1,11 +1,15 @@
 package com.ExceptionDTO.ExceptionDTO.Config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +17,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+
+    JwtTokenFilter jwtTokenFilter;
+
+//    public SecurityConfig(JwtTokenFilter jwtTokenFilter) {
+//        this.jwtTokenFilter = jwtTokenFilter;
+//    }
 
 
     @Bean
@@ -26,19 +38,26 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception{
-        httpSecurity.csrf().disable().
-                authorizeHttpRequests((authorize)->{
-//                    authorize.requestMatchers(HttpMethod.GET,"/api/users/show-users").hasAnyRole("USER","ADMIN");
+//
 
-                    authorize.anyRequest().authenticated();
-//                    authorize.requestMatchers(HttpMethod.POST,"/api/users/create").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET,"/api/users/show-users").hasAnyRole("USER","ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET,"/api/users/show-user/**").hasAnyRole("USER","ADMIN");
-                }).
-        httpBasic(Customizer.withDefaults());
+
+        httpSecurity
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+
+        httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
+
+
 
 //    @Bean
 //    public UserDetailsService userDetailsService(){
