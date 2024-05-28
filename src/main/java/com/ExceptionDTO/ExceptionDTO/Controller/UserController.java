@@ -55,6 +55,7 @@ public class UserController {
                 requestDto.getUsername(),
                 requestDto.getPassword()
         );
+        System.out.println("TOKEN IN USERNAME AND  PASSWORD AUTH "+token);
         authenticationManager.authenticate(token);
         String jwt = jwtUtil.generate(requestDto.getUsername());
         return ResponseEntity.ok(jwt);
